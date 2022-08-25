@@ -17,7 +17,7 @@
 // console.log(lastName);
 
 // --- (02) --------------------------------------------------------------------------
-// "json", tipi belirsiz bir değişken. Buna sonradan number ve string atanabilir. 
+// "json", tipi belirsiz bir değişken. Buna sonradan number ve string atanabilir.
 // Editörde ve derlemede HATA alınmaz. JSON.parse genelde obje döner ama buradaki
 // sayı da olabilir.
 // let json = JSON.parse("55");    // json'a 55 sayısı atanır
@@ -52,10 +52,10 @@
 // if(typeof w === 'object' && w !== null) {
 //   (w as { runANonExistentMethod: Function }).runANonExistentMethod();
 // }
-// Although we have to cast multiple times we can do a check in the if to secure our type and have a safer casting 
+// Although we have to cast multiple times we can do a check in the if to secure our type and have a safer casting
 
 // Type: never >> effectively throws an error whenever it is defined
-// let x: never = true; // Error: Type 'boolean' is not assignable to type 'never'. 
+// let x: never = true; // Error: Type 'boolean' is not assignable to type 'never'.
 
 // Type: undefined & null
 // let y: undefined = undefined;
@@ -66,17 +66,313 @@
 // --- (04) --------------------------------------------------------------------------
 // https://www.w3schools.com/typescript/typescript_arrays.php
 
-
 //***********************************************************************************/
 // Mosh Hamedani - The Ultimate TypeScript                                  24.08.2022
 //***********************************************************************************/
+// JavaScript kısaca JS, TypeScript kısaca TS olarak geçecektir.
+// JavaScript Compiler kısaca JSC, TypeScript compiler kısaca TSC olarak geçecektir.
 
-// LESSON 07:
-let age: number = 39;
-//age = 'a';      // HATA
-if(age < 50)
-    age += 10;
+//------------------------------------------------------------------------------------
+// LESSON 07
+//------------------------------------------------------------------------------------
+// let age: number = 39;
+// //age = 'a';      // HATA
+// if(age < 50)
+//     age += 10;
+// console.log(age)
 
-console.log(age)
+//------------------------------------------------------------------------------------
+// LESSON 11: Built-in types
+//------------------------------------------------------------------------------------
+// JavaScript: number, string, boolean, null, undefined, object
+// TypeScript: JS + any, unknown, never, enum, tuple
 
-// LESSON 11: Fundamentals
+// let sales: number = 123_456_789;
+// let sales2 = 123_456_789; //Inferring type from annocation (atanan değerden anlam çıkartma)
+// //TSC, atanan değerden sales2'nin number olduğunu anlayacaktır.
+
+// let course: string = 'TypeScript';
+// let is_published: boolean = true;
+
+// // Type: any
+// let level; // TSC level'in type'ını any olarak görür
+// level = 1;
+// level = 'text'; // bu işlem, değişkeni aynı JS'deki gibi kullanmak demek. TS'nin mantığına ters
+
+// //function render(document) {...} // HATA
+// function render(document: string) {
+//   console.log(document);
+// }
+
+//------------------------------------------------------------------------------------
+// LESSON 13: Arrays
+//------------------------------------------------------------------------------------
+// let numbers = [1, 2, '3']; //JS
+// let numbers2: number[] = [1, 2, 3]; //TS
+// // infer özelliğinden dolayı ": number[]" kısmı olmasa da TSC tipi anlar. Buraya numbers'daki gibi
+// // '3' elemanı geçilemez.
+
+// // Tip bildirimini kaldırmak sakıncalı olabilir. Boş bir array oluştururken bu array'de sadece sayı
+// // olması isteniyorsa tip bildirimi koyulmadığında TSC bu array'i "any type" olarak alacaktır.
+// // Bu nedenle boş dizi tanımlamalarında dizideki elemanların tipleri istenen değer dışında
+// // atanamasın diye aşağıdaki gibi tipini belirtmek gerekir.
+// let numbers3: number[] = []; // number[] tipinden olur
+// numbers3[0] = 1; //OK
+// // numbers3[1] = '1'; //HATA
+
+// // numbers2 dizisi sadece sayılardan oluştuğu için . erişiminde sadece sayılarla ilgili metotlar
+// // listelenir. Bu da TS'nin bir avantajıdır. Bir sürü metotla kafa karıştırmaz.
+// const numbers4: string[] = numbers2.map(e => e.toString());
+// console.log(numbers4);
+
+//------------------------------------------------------------------------------------
+// LESSON 14: Tuples
+//------------------------------------------------------------------------------------
+// Uzunluğu ve her elemanının tipi belli olan dizi tanımlamak için kullanılır.
+
+// let user: [number, string] = [1, 'TA2LSM'];
+// ilk eleman number, ikincisi string olan dizi tanımlama. 3. elemanı yazarsak
+// hata verir. Dizi elemanlarına tek tek erişilirse ve . notasyonu ile metotlara
+// bakılırsa number ve string için ayrı metotlar görülebilr. Oldukça güzel bir
+// özellik. TSC ile derlediğimizde klasik JS array olarak derlenir.
+
+// Genelde 2'den fazla elemanlı dizi oluşturmada kullanılmazlar. Nedeni de
+// let user: [number, string, boolean, number] = [1, 'TA2LSM', true, 0];
+// şeklinde tanımlı bir dizide eleman sayısı arttıkça eklenen elemanların
+// ne anlama geldiği, neden kullanıldığı çok açık olmayacaktır.
+
+// Aşağıdaki özelliğin normalde hata vermesi lazım.
+// Henüz çözülmemiş bir sorun bu. (25.08.2022)
+// user.push(1);
+
+// let user2: [number, string];
+// user2[0] = 1;   // HATA
+
+//------------------------------------------------------------------------------------
+// LESSON 15: Enums
+//------------------------------------------------------------------------------------
+// Enum tanımlamasında PascalCase kullanılır
+// const enum Sizes {
+//   Small = 1,
+//   Medium,
+//   Large,
+//   ExtraLarge = 10,
+// }
+
+// buraya "const" yazmazsak TSC'nin derlediği js dosyasında çok gereksiz hatta "var" kullanılan
+// kodlar türetilir. konsola "tsc" yazıp iki durumu da derleyip görebilirsiniz.
+// const enum Sizes {
+//   Small = 'S',
+//   Medium = 'M',
+//   Large = 'L',
+//   ExtraLarge = 'XL',
+// }
+
+// // console.log(Sizes.ExtraLarge);
+// let mySize: Sizes = Sizes.ExtraLarge;
+// console.log('My size is,', mySize);
+
+//------------------------------------------------------------------------------------
+// LESSON 16: Functions
+//------------------------------------------------------------------------------------
+// // // return type void
+// // function calculateTax0(income: number) {
+// //   //...
+// // }
+
+// // // return type number olarak otomatik şekilde görülür ama fonksiyon içinde NaN değer
+// // // dönme şansı da var. Bu nedenle aşağıdaki gibi yazılmalı
+// // function calculateTax1(income: number) {
+// //   return 0;
+// // }
+
+// function calculateTax(income: number, taxYear: number): number {
+//   //   let x = 23;
+//   //   // aşağıdaki gibi kullanılmazsa hata verir (local variable ile ilgili ayardan dolayı)
+//   //   console.log(x);
+
+//   //return 0; >> burası yazılmazsa yukardaki ...): number kısmı hata gösterir
+//   //return 'a'; >> number hariç veri dönerse bu kısım hata gösterir
+
+//   if (taxYear < 2022) console.log('Old tax year');
+//   else console.log('New tax year');
+
+//   if (income < 50_000) return income * 1.2;
+//   // alttaki return olmasa yine yukardaki ...): number kısmı hata gösterir
+//   // nedeni de eğer koşul gerçekleşmezse "undefined" dönme ihtimalidir.
+//   return income * 1.3;
+// }
+
+// // Yukarıdaki tanımlamaya göre fonksiyona iki parametre de geçilmelidir.
+// // yoksa hata alınır. Ne eksik ne de fazla parametre geçilemez.
+// calculateTax(65_000, 2021);
+
+// // taxYear burada optional oldu. Ama kullanıldığı yerde undefined olarak gelirse
+// // hata almayalım diye tanımlıysa ya da 2000 değerini kullan dedik. Bu yaklaşım
+// // yerine alttaki tercih ediliyor
+// // function calculateTax2(income: number, taxYear?: number): number {
+// //   if ((taxYear || 2000) < 2022) console.log('Old tax year');
+// //   else console.log('New tax year');
+
+// //   if (income < 50_000) return income * 1.2;
+// //   return income * 1.3;
+// // }
+
+// // BEST PRACTISE
+// function calculateTax2(income: number, taxYear = 2000): number {
+//   if (taxYear < 2022) console.log('Old tax year');
+//   else console.log('New tax year');
+
+//   if (income < 50_000) return income * 1.2;
+//   return income * 1.3;
+// }
+
+// calculateTax2(65_000);
+// calculateTax2(65_000, 2023);
+
+//------------------------------------------------------------------------------------
+// LESSON 17: Objects
+//------------------------------------------------------------------------------------
+// let employee = { id: 1 };
+// employee.name = 'Semih'; // HATA
+
+// Her kullanıcının adı olmak zorunda bu parametre optional geçilemez.
+// ama isAdmin parametresi optional geçilebilir.
+// let employee: {
+//   readonly id: number;
+//   name: string;
+//   isAdmin?: boolean;
+//   retire: (date: Date) => void;
+// } = {
+//   id: 1,
+//   name: '',
+//   retire: (date: Date) => {
+//     console.log(date);
+//   },
+// };
+
+// employee.name = 'Semih';
+// employee.isAdmin = true;
+// // employee.id = 1; // HATA: id is readonly
+// console.log(employee);
+
+//------------------------------------------------------------------------------------
+// LESSON 18: Advanced Types
+//------------------------------------------------------------------------------------
+// Type aliases, Unions and intersections, Type narrowing, Nullable types,
+// The unknown type, The never type
+
+// Type Aliases (Tip tanımlaması)
+// Aşağıdaki tanımlamada bazı sıkıntılar var:
+// (1): Yeni bir employee yaratmak istediğimizde tanımlamayı tekrar etmemiz gerekiyor
+// employee: {...} kısmını tekrar etmek DRY prensibine aykırı (Don't Repeat Yourself)
+// (2): Yeni bir employee oluşturulduğunda bazı farklı özellikleri farklı olabilir.
+// (3): Tanımlamayı okuması ve anlaması biraz zor.
+
+// Yeni tip tanımlamada PascalCase kullanılıyor.
+// type Employee = {
+//   readonly id: number;
+//   name: string;
+//   isAdmin?: boolean;
+//   retire: (date: Date) => void;
+// };
+
+// let employee: Employee = {
+//   id: 1,
+//   name: 'Semih',
+//   retire: (date: Date) => {
+//     console.log(date);
+//   },
+// };
+
+// // Union Type
+// // weight: number | string kısmı union
+// // weight. yapılırsa SADECE number ve string için ortak metotlar görülür
+// function kgToLbs(weight: number | string): number {
+//   // Narrowing
+//   // Burada TSC weight'in number olduğunu biliyor
+//   // . erişimi ile ona göre metotlar çıkaracaktır
+//   if (typeof weight === 'number') {
+//     return weight * 2.2;
+//   } else return parseInt(weight) * 2.2;
+// }
+
+// console.log(kgToLbs(10));
+// console.log(kgToLbs('10kg'));
+
+// Intersection Types
+// hem number hem de string olan bir obje
+// let weight: number & string;
+// type Draggable = {
+//   drag: () => void;
+// };
+
+// type Resizable = {
+//   resize: () => void;
+// };
+
+// // Taşınabilen ve boyutu değiştirilebilen bir tip (UIWidget)
+// type UIWidget = Draggable & Resizable; // Intersection Type
+
+// let textBox: UIWidget = {
+//   drag: () => {},
+//   resize: () => {},
+// };
+
+// Literal (exact or specific value) Types
+// let quantity: 50 = 51;  // HATA sadce 50 olabilir
+// let quantity: 50 | 100 = 101; // HATA sadce 50 ya da 100 olabilir
+// Union kullanarak aşağıdaki gibi tanımlanabilir
+// type Quantity = 50 | 100;
+// let quantity: Quantity = 100;
+
+// type Metric = 'cm' | 'inch';
+// let lenght: Metric = 'cm';
+
+// Nullable Types
+// function great(name: string) {
+//   if (name) console.log(name.toUpperCase());
+//   else console.log('Hello');
+// }
+
+//great('semih');
+// great(null); // HATA
+// great(undefined); // HATA
+// name: string | null | undefined olarak yazılırsa hata alınmaz.
+// Ama bu TSC mantığına ters
+
+// Optional Chaining
+// type Customer = {
+//   birthday: Date;
+// };
+
+// function getCustomer(id: number): Customer | null | undefined {
+//   return id === 0 ? null : { birthday: new Date() };
+// }
+
+// let customer = getCustomer(0);
+// // if (customer !== null && customer !== undefined) console.log(customer.birthday);
+// // Optional Property Access Parameter (OBJE'ler için)
+// console.log(customer?.birthday);
+
+// type Customer2 = {
+//   birthday?: Date;
+// };
+
+// let customer2 = getCustomer(0);
+// console.log(customer2?.birthday?.getFullYear());
+
+// // Optional Element Access Parameter (ARRAY'ler için)
+// // console.log(customers?.[0].birthday);
+
+// // Optional call
+// // let log: any = (message: string) => console.log(message);
+// // değilde şöyle tanımlansa:
+// let log: any = null;
+// // log('a'); // HATA
+// log?.('a'); // log gerçek bir fonksiyonu referans gösterirse yani yukardaki gibiyse çalışır
+
+// Nullish Coaelscing Operator
+
+// The unknown type
+// let a: unknown;
