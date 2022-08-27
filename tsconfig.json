@@ -13,7 +13,8 @@
     /* Language and Environment */
     "target": "ES2016" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
     "lib": [
-      "es6"
+      "es6",
+      "DOM"
     ] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
     // "jsx": "preserve",                                /* Specify what JSX code is generated. */
     // "experimentalDecorators": true,                   /* Enable experimental support for TC39 stage 2 draft decorators. */
@@ -96,7 +97,7 @@
     // "noImplicitOverride": true,                       /* Ensure overriding members in derived classes are marked with an override modifier. */
     // "noPropertyAccessFromIndexSignature": true,       /* Enforces using indexed accessors for keys declared using an indexed type. */
     // "allowUnusedLabels": true,                        /* Disable error reporting for unused labels. */
-    // "allowUnreachableCode": true,                     /* Disable error reporting for unreachable code. */
+    "allowUnreachableCode": false /* Disable error reporting for unreachable code. */,
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */

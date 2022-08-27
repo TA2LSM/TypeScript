@@ -94,7 +94,7 @@
 // let course: string = 'TypeScript';
 // let is_published: boolean = true;
 
-// // Type: any
+// // Type: any (mümkün olduğunca KULLANMAMAK GEREKİYOR)
 // let level; // TSC level'in type'ını any olarak görür
 // level = 1;
 // level = 'text'; // bu işlem, değişkeni aynı JS'deki gibi kullanmak demek. TS'nin mantığına ters
@@ -373,6 +373,85 @@
 // log?.('a'); // log gerçek bir fonksiyonu referans gösterirse yani yukardaki gibiyse çalışır
 
 // Nullish Coaelscing Operator
+// let speed: number | null = null;
+// let ride = {
+//   //Falsy (undefined, null, '', false, 0)
+//   //   speed: speed || 30, // speed 0 ise sıkıntı olur aşağıdaki gibi olmalı
+//   //   speed: speed !== null ? speed : 30,   // standard JavaScript
+//   speed: speed ?? 30, // TypeScript (Nullish Coaelscing Operator)
+//   // speed, null ya da undefined değilse o değeri kullan, aksi durumda 30 değerini kullan
+// };
+
+// Type Assertions
+// document, JS'de bir döküman ya da web sayfasına erişim için kullanılıyor.
+
+// let message = document.getElementById('message');
+// bu şekilde tanımlanırsa message'ın tipi HTMLElement ya da null olur.
+// message.value() değerine burada erişilemez !!!
+// daha kesin bir atama için aşağıdaki gibi yapılmalıdır.
+
+// HTMLElement, javascript class'ı. Her tür HTML element'ini barındırıyor
+// HTMLInputElement ...vs element tipleri daha kesin tip tanımlamalarıdır
+
+// let message = document.getElementById('message') as HTMLInputElement;
+// Veri tipi belirleme. Bu tipten veri alınmazsa hata alınır, program göçer
+
+// let message = <HTMLInputElement>document.getElementById('message');
+// // Veri tipi dönüştüme (casting)
+
+// console.log(message.value);
 
 // The unknown type
-// let a: unknown;
+// eğer document'in aşağıdaki metotları yoksa program göçer
+// function render (document: any) {
+//     document.move();
+//     document.fly();
+//     document.whateverWeWant();
+// }
+
+// type Person = {
+//   name: string;
+//   phone: number;
+// };
+
+// function render(document: unknown) {
+//   // Aşağıdaki gibi bir tip kontrolü yapıp (Type Narrowing) ona göre işlem yaptığımız an
+
+//   // TSC document tipini number olarak varsayar ve toString() işlevi için hata vermez
+//   if (typeof document === 'number') document.toString();
+//   // TSC document tipini number olarak varsayar ve toUpperCase() işlevi için hata vermez
+//   if (typeof document === 'string') document.toUpperCase();
+
+//   // document.toString(); // burada .toString() için öneri verilmez. Tip unknown hatası verir
+
+//   // "typeof" sadece "primitive" tiplerde tip kontrolü için kullanılabilir.
+//   // Custom type'lar için "instanceof" kullanılmalıdır.
+//   //   if (document instanceof Person) {
+//   //     //...
+//   //   }
+// }
+
+// The never type
+// Fonksiyon dönüş tipi never olarak tanımlanırsa aşağıdaki console.log() kısmı
+// soluk olarak gözükür. Editör o satıra asla gelinemeyeceğini bildirir.
+// function processEvents(): never {
+//   while (true) {
+//     // Read a message from a queue
+//   }
+// }
+
+// // Hata fırlatıldığında uygulama göçer ve kod yürütülmeyeceği için dönüş tipi
+// // olarak never koyulmalıdır.
+// function reject(message: string): never {
+//   throw new Error(message);
+// }
+
+// // processEvents();
+// reject('...');
+// console.log('System message');
+
+// ------------------------------------------------------------------------------------
+// Object-oriented Programming
+// Classes, Constructors, Properties and methods, Access control keywords,
+// getters and setters, static members, Index signatures, Inheritance,
+// Polymorphism, Abstract classes
