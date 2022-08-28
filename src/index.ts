@@ -603,4 +603,245 @@
 // // console.log(ride1.activeRides, ride2.activeRides);
 // console.log(Ride.activeRides);
 
-// Inheritance
+// Inheritance: Ortak kullanılacak class'ları diğer class'lar
+// içine dahil etme ve bunlardan obje türetme
+// Parent / Base ya da Super Class deniyor
+// class Person {
+//   constructor(public firstName: string, public lastName: string) {}
+
+//   get fullname() {
+//     return this.firstName + ' ' + this.lastName;
+//   }
+
+//   walk() {
+//     console.log('walking...');
+//   }
+
+//   talk() {
+//     console.log('talking...');
+//   }
+// }
+
+// // let person = new Person('Semih', 'SENOL'); // person object
+// // console.log(person.fullname);
+
+// // Child / Derived ya da Sub Class deniyor
+// class Student extends Person {
+//   // Parent class'ı çağırmamız lazım. Çünkü orada bir Person oluşturulacak
+//   // Buraya girilen bilgilerden diğer class'ı ilgilendirenler super(...) içine
+//   // parametre olarak verilmelidir. firstName ve lastName, Person class'ında
+//   // public olarak tanımlı olduğu için buraya public yazmaya gerek yok.
+//   constructor(public studentId: number, firstName: string, lastName: string) {
+//     super(firstName, lastName);
+//   }
+
+//   takeTest() {
+//     console.log('taking a test...');
+//   }
+// }
+
+// let student = new Student(1764, 'Ali', 'Poyraz'); // student object
+// console.log(student);
+
+// class Teacher extends Person {
+//   constructor(public phoneNumber: string, firstName: string, lastName: string, public expertise: string) {
+//     super(firstName, lastName);
+//   }
+
+//   teach() {
+//     console.log('teaching...');
+//   }
+// }
+
+// let teacher = new Teacher('1234567', 'John', 'Smith', 'English');
+// console.log(teacher);
+// console.log(teacher.fullname);
+
+// Method Overriding: Mesela Teacher class'ında öğretmen isimlerinin önüne
+// ünvan yazmak istesek ne olacak?
+// class Person {
+//   constructor(public firstName: string, public lastName: string) {}
+
+//   get fullname() {
+//     return this.firstName + ' ' + this.lastName;
+//   }
+
+//   walk() {
+//     console.log('walking...');
+//   }
+
+//   talk() {
+//     console.log('talking...');
+//   }
+// }
+
+// class Student extends Person {
+//   constructor(public studentId: number, firstName: string, lastName: string) {
+//     super(firstName, lastName);
+//   }
+
+//   takeTest() {
+//     console.log('taking a test...');
+//   }
+// }
+
+// class Teacher extends Person {
+//   constructor(
+//     public phoneNumber: string,
+//     firstName: string,
+//     lastName: string,
+//     public expertise: string,
+//     public academicTitle: string,
+//   ) {
+//     super(firstName, lastName);
+//   }
+
+//   // Parent class'taki fullname metodu işlevsiz. Buradaki onun yerine yürütülür.
+//   // Fakat override yazılmasa da burada aynı sonucu alıyoruz çünkü super.fullname
+//   // kısmını da kullandık. Tamamen farklı birşeyler yapsaydık -örneğin aşağıdaki
+//   // yorum olarak bırakılmış kısımda soy isim önce geliyor- o zaman override
+//   // unutulduğu için sıkıntı olacaktı. tsconfig.json içinden bu ayarı açabiliriz.
+//   override get fullname() {
+//     // return this.academicTitle + '. ' + this.lastName.toUpperCase() + ' ' + this.firstName;
+//     return this.academicTitle + '. ' + super.fullname;
+//   }
+
+//   teach() {
+//     console.log('teaching...');
+//   }
+// }
+
+// let teacher = new Teacher('1234567', 'John', 'Smith', 'English', 'Prof');
+// // console.log(teacher);
+// console.log(teacher.fullname);
+
+// Polymorphism: Many Form anlamına geliyor
+// class Person {
+//   constructor(public firstName: string, public lastName: string) {}
+
+//   get fullName() {
+//     return this.firstName + ' ' + this.lastName;
+//   }
+
+//   walk() {
+//     console.log('walking...');
+//   }
+
+//   talk() {
+//     console.log('talking...');
+//   }
+// }
+
+// class Student extends Person {
+//   constructor(public studentId: number, firstName: string, lastName: string) {
+//     super(firstName, lastName);
+//   }
+
+//   takeTest() {
+//     console.log('taking a test...');
+//   }
+// }
+
+// class Teacher extends Person {
+//   constructor(
+//     public phoneNumber: string,
+//     firstName: string,
+//     lastName: string,
+//     public expertise: string,
+//     public academicTitle: string,
+//   ) {
+//     super(firstName, lastName);
+//   }
+
+//   override get fullName() {
+//     // return this.academicTitle + '. ' + this.lastName.toUpperCase() + ' ' + this.firstName;
+//     return this.academicTitle + '. ' + super.fullName;
+//   }
+
+//   teach() {
+//     console.log('teaching...');
+//   }
+// }
+
+// class Principal extends Person {
+//   override get fullName() {
+//     // return this.academicTitle + '. ' + this.lastName.toUpperCase() + ' ' + this.firstName;
+//     return 'Principal ' + super.fullName;
+//   }
+// }
+
+// function printNames(people: Person[]) {
+//   // her iterasyonda person objesi farklı bir obje formuna geçiyor (polymorhism)
+//   for (let person of people) console.log(person.fullName);
+// }
+
+// // let teacher = new Teacher('1234567', 'John', 'Smith', 'English', 'Prof');
+// // console.log(teacher);
+// // console.log(teacher.fullName);
+
+// printNames([
+//   new Student(1, 'Mary', 'Alexander'),
+//   new Teacher('1234567', 'John', 'Smith', 'English', 'Prof'),
+//   new Principal('Semih', 'Senol'),
+// ]);
+
+// Private vs Protected members
+// protected keyword'ünün kullanılması pek önerilmez.
+// İleri seviye yazılımcılar için bir özellik
+// class Person {
+//   constructor(public firstName: string, public lastName: string) {}
+
+//   get fullName() {
+//     return this.firstName + ' ' + this.lastName;
+//   }
+
+//   protected walk() {
+//     console.log('walking...');
+//   }
+
+//   talk() {
+//     console.log('talking...');
+//   }
+// }
+
+// class Student extends Person {
+//   constructor(public studentId: number, firstName: string, lastName: string) {
+//     super(firstName, lastName);
+//   }
+
+//   public takeTest() {
+//     this.walk(); //  super.walk(); ile de erişilebiliyor
+
+//     // this.talk();
+//     // yukarda talk için private kullanırsak burada erişemeyiz ama private
+//     // yazıp bir yerden erişmeyince de hata veriyor
+
+//     console.log('taking a test...');
+//   }
+// }
+
+// class Teacher extends Person {
+//   constructor(
+//     public phoneNumber: string,
+//     firstName: string,
+//     lastName: string,
+//     public expertise: string,
+//     public academicTitle: string,
+//   ) {
+//     super(firstName, lastName);
+//   }
+
+//   override get fullName() {
+//     // return this.academicTitle + '. ' + this.lastName.toUpperCase() + ' ' + this.firstName;
+//     return this.academicTitle + '. ' + super.fullName;
+//   }
+
+//   teach() {
+//     console.log('teaching...');
+//   }
+// }
+
+// let student = new Student(1764, 'Ali', 'Poyraz');
+// student.takeTest();
+
+//Abstract Classes and Methods
