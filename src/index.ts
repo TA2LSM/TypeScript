@@ -455,3 +455,152 @@
 // Classes, Constructors, Properties and methods, Access control keywords,
 // getters and setters, static members, Index signatures, Inheritance,
 // Polymorphism, Abstract classes
+
+// Creating Class
+// class Account {
+//   //   readonly id: number; // id never changes
+//   //   owner: string;
+//   //   private _balance: number;
+//   //   nickname?: string; // optional parameter
+
+//   //   // Account class' constructor
+//   //   constructor(id: number, owner: string, balance: number) {
+//   //     this.id = id;
+//   //     this.owner = owner;
+//   //     this._balance = balance;
+//   //     // class içinde private olarak tanımlı değişkenlerin başına _(underscore) konur.
+//   //   }
+
+//   // Yukarıdaki tanımlamanın kısa yolu aşağıdaki şekilde yazılabilir
+//   // Class içinde private olarak tanımlı değişkenlerin başına _(underscore) konur.
+//   // Account class' constructor
+//   constructor(public readonly id: number, public owner: string, private _balance: number) {}
+
+//   deposit(amount: number): void {
+//     const val = this._balance + amount;
+//     if (val < 0) {
+//       console.log('Not enough amount!');
+//       // throw new Error('Invalid amount');
+//       return;
+//     }
+
+//     let tax: number = 0;
+//     if (amount > 0) {
+//       tax = this.calculateTax(amount);
+//     }
+
+//     this._balance += amount - tax;
+
+//     // Record a transaction
+//     //...
+//   }
+
+//   private calculateTax(amount: number): number {
+//     return amount * 0.01;
+//   }
+
+//   // getBalance METHOD
+//   //   getBalance(): number {
+//   //     return this._balance;
+//   //   }
+
+//   // GETTER
+//   get balance() {
+//     return this._balance;
+//   }
+
+//   // SETTER
+//   //   set balance(value: number) {
+//   //     if (value < 0) throw new Error('Invalid balance!');
+//   //     this._balance = value;
+//   //   }
+// }
+
+// // Creating Object from Class
+// let account = new Account(1, 'Semih', 0); // object
+// // account.id = 34; // HATA (readonly)
+
+// account.deposit(100);
+// account.deposit(-10);
+
+// // account.balance = 0; // private olduğu için hatayla değiştirilemez.
+// // bu işlemi direkt olarak yapamamamız lazım. deposit() metodu üzerinden yapıp
+// // her işlemde transaction kaydı tutumak istiyoruz. Bu nedenle ACCESS MODIFIERS
+// // kullanılır. 3 çeşit access modifier var. Public, private, protected
+
+// // console.log('Balance:', account._balance);  // burası artık private tanımlamadan dolayı hata verir
+// // console.log(account.getBalance()); // bu şekilde çözüm üretilebilir ya da getter/setter kullanılır.
+// console.log(account.balance); // getter
+
+// // console.log(typeof account); // object
+// console.log(account); // object
+// console.log(account instanceof Account); // true (objelerle uğraşırken HER ZAMAN instanceof kullanılır)
+
+// Index Signatures
+// Bir objeye dinamik olarak veri eklemek için kullanılır
+// class SeatAssignment {
+//   // A1, A2, ...
+//   // Ali, Ayşe, Hasan, ...
+//   // Index Signature Property
+//   [seatNumber: string]: string;
+// }
+
+// let seats = new SeatAssignment();
+// // Aşağıdaki gibi de yazılabiliyor.
+// // (seats.A1 = 'Ali'), (seats.A2 = 'Ayse'), (seats.A3 = 'Hasan');
+// seats.A1 = 'Ali'; // seats['A1'] = Ali; ile aynı
+// seats.A2 = 'Ayse';
+// seats.A3 = 'Hasan';
+// console.log(seats);
+
+// Static Members
+// Uber gibi düşünülürse
+// class Ride {
+//   //   activeRides: number = 0;
+//   //   // constructor olmadan burada direkt değer atandı (initialize)
+
+//   //   start() {
+//   //     ++this.activeRides;
+//   //   }
+
+//   //   stop() {
+//   //     if (this.activeRides > 0) --this.activeRides;
+//   //   }
+
+//   //------------------------------------------
+//   private static _activeRides: number = 0;
+//   // static ile activeRides sadece Ride class'ına ait oldu. Aşağıda
+//   // tanımlanacak ride objelerine ait değil. Bu nedenle direk Ride
+//   // class'ı üzerinden erişmemiz lazım
+
+//   start() {
+//     ++Ride._activeRides;
+//   }
+
+//   stop() {
+//     if (Ride._activeRides > 0) --Ride._activeRides;
+//   }
+
+//   // bu getter ride objesine ait olmasın Ride class'ına ait olsun diye
+//   // başına static yazılmalıdır
+//   static get activeRides() {
+//     return Ride._activeRides;
+//   }
+// }
+
+// // aşağıda 2 ayrı obje yaratılıyor ve ikisi de farklı hafıza alanlarında olduğundan
+// // global olarak kaç aktif sürüş var görülemez. Bu sorunu çözmek için static keyword
+// // kullanılır. Yukarısı buna göre düzenlendi. Ayrıca her sürüşün başlangıç konumu,
+// // başlangıç saati, hedef konumu ...vs olabilir.
+// let ride1 = new Ride();
+// ride1.start();
+
+// let ride2 = new Ride();
+// ride2.start();
+
+// // Ride.activeRides = 10; // yanlışlıkla böyle erişilemesin diye private yapıldı
+
+// // console.log(ride1.activeRides, ride2.activeRides);
+// console.log(Ride.activeRides);
+
+// Inheritance
