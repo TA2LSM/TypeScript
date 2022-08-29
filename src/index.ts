@@ -845,3 +845,257 @@
 // student.takeTest();
 
 //Abstract Classes and Methods
+// Öz (abstract) class. Tek başına kullanılamaz. Bir başka class üerinden kullanılabilir.
+// abstract class Shape {
+//   constructor(public color: string) {}
+
+//   // Bu şekilde kullanılamaz
+//   //   abstract render() {
+//   //     //...
+//   //   }
+
+//   // abstract metotlar sadece abstract class'lar içinde kullanılabilir.
+//   abstract render(): void; // abstract metot
+// }
+
+// class Circle extends Shape {
+//   constructor(public radius: number, color: string) {
+//     super(color);
+//   }
+
+//   override render(): void {
+//     console.log('Rendering circle...');
+//   }
+// }
+
+// // Shape class'ı için render işlevi neyi render edecek? Üçgen, kare ya da daire
+// // nasıl bilecek? Bu nedenle Shape class'ı öz class oalrak Circle class'ı tarafından
+// // kullanılmalıdır.
+// // let shape = new Shape('red');    // HATA
+// let shape = new Circle(1, 'red');
+// shape.render();
+
+// Interfaces: Objelerin şeklini tanımlamak için kullanılır
+// Mesela takvimler (google, iCal, Outlook) için düşünelim,
+// bunlar için temelde aynı olan bazı özellikler olacaktır.
+
+// Bu özellikleri temel class'ta toplayalım:
+// abstract class Calendar {
+//   constructor(public name: string) {}
+
+//   abstract addEvent(): void;
+//   abstract removeEvent(): void;
+// }
+
+// abstract class yerine bazı durumlarda interface kullanılır
+// interface Calendar {
+//   name: string;
+//   addEvent(): void; // method decleration (implementation DEĞİL {} kullanılamaz)
+//   removeEvent(): void;
+// }
+
+// interface CloudCalendar extends Calendar {
+//   sync(): void;
+// }
+
+// // CloudCalendar üzerine gelinip CTRL+. / CMD+. basılırsa bir menü açılacak
+// // aşağıdaki template (constructor HARİÇ) otomatik olarak eklenebilir
+// class GoogleCalendar implements Calendar {
+//   constructor(public name: string) {}
+
+//   addEvent(): void {
+//     throw new Error('Method not implemented.');
+//   }
+//   removeEvent(): void {
+//     throw new Error('Method not implemented.');
+//   }
+// }
+
+//--------------------------------------------------------------
+// SECTION 5: Generics
+// Generic classes, Generic functions, Generic interfaces, Generic constraints
+// type mapping
+
+// Understanding the problem
+// class KeyValuePair {
+//   constructor(public key: number, public value: string) {}
+// }
+
+// let pair = new KeyValuePair('1', 'Apple');  // HATA: ilk parametre number olmak zorunda
+
+//Generic Class ile sorunu çözebiliriz. Böylece iki ayrı class'a gerek kalmaz
+// class KeyValuePair<TKey, TValue> {
+//   constructor(public key: TKey, public value: TValue) {}
+
+//   check() {
+//     let results = [];
+//     if (typeof this.key === 'number') results[0] = 'number';
+//     else if (typeof this.key === 'string') results[0] = 'string';
+//     if (typeof this.value === 'number') results[1] = 'number';
+//     else if (typeof this.value === 'string') results[1] = 'string';
+
+//     console.log(`Type of key is ${results[0]}, type of value is ${results[1]}`);
+//   }
+// }
+// // key ve value birden fazla tipte olabilir. Aşağıdaki tanımlama şekillerine bakınız
+
+// let pair = new KeyValuePair<number, string>(1, 'Apple');
+// pair.check();
+// let pair2 = new KeyValuePair<string, string>('1', 'Apple');
+// pair2.check();
+// let pair3 = new KeyValuePair('2', 8); // tip belirtilmese de TSC görür
+// pair3.check();
+
+// Generic Functions
+//--------------------------------------
+// function wrapInArray<TNumber>(value: TNumber) {
+//   if (typeof value === 'string') return [parseInt(value)];
+//   // always generate a number array
+
+//   return [value];
+// }
+
+// let numbers = wrapInArray('1');
+// console.log(numbers);
+
+// //--------------------------------------
+// // class ArrayUtils {
+// //   wrapInArray<TValue>(value: TValue) {
+// //     if (typeof value === 'string') return [parseInt(value)];
+// //     // always generate a number array
+
+// //     return [value];
+// //   }
+// // }
+
+// // let utils = new ArrayUtils();
+// // let numbers2 = utils.wrapInArray(1);
+// // console.log(numbers2);
+
+// class ArrayUtils {
+//   static wrapInArray<TValue>(value: TValue) {
+//     if (typeof value === 'string') return [parseInt(value)];
+//     // always generate a number array
+
+//     return [value];
+//   }
+// }
+
+// let numbers2 = ArrayUtils.wrapInArray(1);
+// console.log(numbers2);
+//--------------------------------------
+
+// Generic Interfaces
+// http://mywebsite.com/users
+// http://mywebsite.com/products gibi iki endpoint olsun
+
+// interface Result<T> {
+//   data: T | null;
+//   error: string | null;
+// }
+
+// function fetch<T>(url: string): Result<T> {
+//   return { data: null, error: null };
+// }
+
+// interface User {
+//   username: string;
+// }
+
+// interface Product {
+//   title: string;
+// }
+
+// let result1 = fetch<User>('url'); // return by (Result of User)
+// // result1.data.username
+
+// let result2 = fetch<Product>('user'); // return by (Result of Product)
+// // result2.data.title
+
+// Generic Constraints
+// function echo<T extends number | string>(value: T): T {
+//   return value;
+// }
+
+// echo('1');
+// echo(1);
+// // echo([1]);
+// // HATA: yukarıdaki tanımda parametre sadce number veya string olabilir deniyor
+
+//--------------------------------------
+// function echo<T extends { name: string }>(value: T): T {
+//   return value;
+// }
+
+// // echo('Ali');  // HATA yukarıdaki tanımdaki şekle (shape) uymuyor
+// echo({ name: 'Semih' });
+
+//--------------------------------------
+// interface Person {
+//   name: string;
+// }
+
+// function echo<T extends Person>(value: T): T {
+//   return value;
+// }
+
+// echo({ name: 'Semih' });
+
+//--------------------------------------
+// class Person {
+//   constructor(public name: string) {}
+// }
+
+// class Customer extends Person {}
+
+// function echo<T extends Person>(value: T): T {
+//   return value;
+// }
+
+// echo(new Person('Semih'));
+// echo(new Customer('Semih'));
+
+// Extending Generic Classes
+// interface Product {
+//   name: string;
+//   price: number;
+// }
+
+// class Store<T> {
+//   protected _objects: T[] = [];
+
+//   add(obj: T): void {
+//     this._objects.push(obj);
+//   }
+// }
+
+// // Generic class kullanabilmek için yeni yaratılan class da generic olmalı
+// // Pass on generic type parameter (iki parametre de aynı tip olarak kullanılır)
+// class CompressibleStore<T> extends Store<T> {
+//   compress() {}
+// }
+
+// //<T> yerine <T extends { name: string }> yazmazsak find metodunda
+// // obj.name erişilemez olur
+// // Restrict the generic type parameter
+// class SearchableStore<T extends { name: string }> extends Store<T> {
+//   find(name: string): T | undefined {
+//     return this._objects.find(obj => obj.name === name);
+//   }
+// }
+
+// // Fix/terminate the generic type parameter
+// class ProductStore extends Store<Product> {
+//   filterByCategory(category: string): Product[] {
+//     return [];
+//   }
+// }
+
+// let store = new CompressibleStore<Product>();
+// let store = new Store<Product>();
+// store._objects = [];
+// bu hata yapılamaz hale getirdik (private) Ama SearchableStore class'ında
+// kullanılacağı için (protected) olarak çevirdik
+
+//--------------------------------------------------------------------------
+// The "keyof" operator
