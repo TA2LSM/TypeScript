@@ -262,6 +262,7 @@
 // Type aliases, Unions and intersections, Type narrowing, Nullable types,
 // The unknown type, The never type
 
+//--------------------------------------------------------------------------
 // Type Aliases (Tip tanımlaması)
 // Aşağıdaki tanımlamada bazı sıkıntılar var:
 // (1): Yeni bir employee yaratmak istediğimizde tanımlamayı tekrar etmemiz gerekiyor
@@ -285,6 +286,7 @@
 //   },
 // };
 
+//--------------------------------------------------------------------------
 // // Union Type
 // // weight: number | string kısmı union
 // // weight. yapılırsa SADECE number ve string için ortak metotlar görülür
@@ -300,6 +302,7 @@
 // console.log(kgToLbs(10));
 // console.log(kgToLbs('10kg'));
 
+//--------------------------------------------------------------------------
 // Intersection Types
 // hem number hem de string olan bir obje
 // let weight: number & string;
@@ -329,6 +332,7 @@
 // type Metric = 'cm' | 'inch';
 // let lenght: Metric = 'cm';
 
+//--------------------------------------------------------------------------
 // Nullable Types
 // function great(name: string) {
 //   if (name) console.log(name.toUpperCase());
@@ -341,6 +345,7 @@
 // name: string | null | undefined olarak yazılırsa hata alınmaz.
 // Ama bu TSC mantığına ters
 
+//--------------------------------------------------------------------------
 // Optional Chaining
 // type Customer = {
 //   birthday: Date;
@@ -365,13 +370,15 @@
 // // Optional Element Access Parameter (ARRAY'ler için)
 // // console.log(customers?.[0].birthday);
 
-// // Optional call
+//--------------------------------------------------------------------------
+// Optional call
 // // let log: any = (message: string) => console.log(message);
 // // değilde şöyle tanımlansa:
 // let log: any = null;
 // // log('a'); // HATA
 // log?.('a'); // log gerçek bir fonksiyonu referans gösterirse yani yukardaki gibiyse çalışır
 
+//--------------------------------------------------------------------------
 // Nullish Coaelscing Operator
 // let speed: number | null = null;
 // let ride = {
@@ -382,6 +389,7 @@
 //   // speed, null ya da undefined değilse o değeri kullan, aksi durumda 30 değerini kullan
 // };
 
+//--------------------------------------------------------------------------
 // Type Assertions
 // document, JS'de bir döküman ya da web sayfasına erişim için kullanılıyor.
 
@@ -401,6 +409,7 @@
 
 // console.log(message.value);
 
+//--------------------------------------------------------------------------
 // The unknown type
 // eğer document'in aşağıdaki metotları yoksa program göçer
 // function render (document: any) {
@@ -431,6 +440,7 @@
 //   //   }
 // }
 
+//--------------------------------------------------------------------------
 // The never type
 // Fonksiyon dönüş tipi never olarak tanımlanırsa aşağıdaki console.log() kısmı
 // soluk olarak gözükür. Editör o satıra asla gelinemeyeceğini bildirir.
@@ -450,12 +460,14 @@
 // reject('...');
 // console.log('System message');
 
-// ------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------
 // Object-oriented Programming
+//--------------------------------------------------------------------------
 // Classes, Constructors, Properties and methods, Access control keywords,
 // getters and setters, static members, Index signatures, Inheritance,
 // Polymorphism, Abstract classes
 
+//--------------------------------------------------------------------------
 // Creating Class
 // class Account {
 //   //   readonly id: number; // id never changes
@@ -536,6 +548,7 @@
 // console.log(account); // object
 // console.log(account instanceof Account); // true (objelerle uğraşırken HER ZAMAN instanceof kullanılır)
 
+//--------------------------------------------------------------------------
 // Index Signatures
 // Bir objeye dinamik olarak veri eklemek için kullanılır
 // class SeatAssignment {
@@ -603,6 +616,7 @@
 // // console.log(ride1.activeRides, ride2.activeRides);
 // console.log(Ride.activeRides);
 
+//--------------------------------------------------------------------------
 // Inheritance: Ortak kullanılacak class'ları diğer class'lar
 // içine dahil etme ve bunlardan obje türetme
 // Parent / Base ya da Super Class deniyor
@@ -785,6 +799,7 @@
 //   new Principal('Semih', 'Senol'),
 // ]);
 
+//--------------------------------------------------------------------------
 // Private vs Protected members
 // protected keyword'ünün kullanılması pek önerilmez.
 // İleri seviye yazılımcılar için bir özellik
@@ -844,6 +859,7 @@
 // let student = new Student(1764, 'Ali', 'Poyraz');
 // student.takeTest();
 
+//--------------------------------------------------------------------------
 //Abstract Classes and Methods
 // Öz (abstract) class. Tek başına kullanılamaz. Bir başka class üerinden kullanılabilir.
 // abstract class Shape {
@@ -875,6 +891,7 @@
 // let shape = new Circle(1, 'red');
 // shape.render();
 
+//--------------------------------------------------------------------------
 // Interfaces: Objelerin şeklini tanımlamak için kullanılır
 // Mesela takvimler (google, iCal, Outlook) için düşünelim,
 // bunlar için temelde aynı olan bazı özellikler olacaktır.
@@ -911,8 +928,9 @@
 //   }
 // }
 
-//--------------------------------------------------------------
+//--------------------------------------------------------------------------
 // SECTION 5: Generics
+//--------------------------------------------------------------------------
 // Generic classes, Generic functions, Generic interfaces, Generic constraints
 // type mapping
 
@@ -946,8 +964,9 @@
 // let pair3 = new KeyValuePair('2', 8); // tip belirtilmese de TSC görür
 // pair3.check();
 
+//--------------------------------------------------------------------------
 // Generic Functions
-//--------------------------------------
+
 // function wrapInArray<TNumber>(value: TNumber) {
 //   if (typeof value === 'string') return [parseInt(value)];
 //   // always generate a number array
@@ -983,8 +1002,8 @@
 
 // let numbers2 = ArrayUtils.wrapInArray(1);
 // console.log(numbers2);
-//--------------------------------------
 
+//--------------------------------------------------------------------------
 // Generic Interfaces
 // http://mywebsite.com/users
 // http://mywebsite.com/products gibi iki endpoint olsun
@@ -1099,3 +1118,39 @@
 
 //--------------------------------------------------------------------------
 // The "keyof" operator
+interface Product {
+  name: string;
+  price: number;
+}
+
+class Store<T> {
+  protected _objects: T[] = [];
+
+  add(obj: T): void {
+    this._objects.push(obj);
+  }
+
+  // string olarak alınan arama parametresi ile arama yapınca bulunacak
+  // value parametresini tipi belli değil. Bu nedenle "unknown" dedik
+  // T >> Product ise keyof T >> 'name' | 'price' olur (union)
+  find(property: keyof T, value: unknown): T | undefined {
+    return this._objects.find(obj => obj[property] === value);
+    // obj[property] >> Index signature property (runtime'da dinamik olarak gelen
+    // kesin olarak bilinmeyen parametresel yaklaşım)
+    // Yukarıda property: string yerine property: keyof T dersek T tipindeki
+    // keyword'ler olduğunu belirtmiş oluruz
+  }
+}
+
+let store = new Store<Product>();
+store.add({ name: 'Silgi', price: 10 });
+
+store.find('name', 'Silgi');
+store.find('price', 10);
+
+// store.find('nonExistingProperty', 10); // App crash!!!
+// yukardaki keyof T değişikliği yapılırsa derlemeden önce burada hata verilir
+// Compile time error
+
+//--------------------------------------------------------------------------
+// Type Mapping
