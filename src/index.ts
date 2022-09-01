@@ -1118,35 +1118,35 @@
 
 //--------------------------------------------------------------------------
 // The "keyof" operator
-interface Product {
-  name: string;
-  price: number;
-}
+// interface Product {
+//   name: string;
+//   price: number;
+// }
 
-class Store<T> {
-  protected _objects: T[] = [];
+// class Store<T> {
+//   protected _objects: T[] = [];
 
-  add(obj: T): void {
-    this._objects.push(obj);
-  }
+//   add(obj: T): void {
+//     this._objects.push(obj);
+//   }
 
-  // string olarak alınan arama parametresi ile arama yapınca bulunacak
-  // value parametresini tipi belli değil. Bu nedenle "unknown" dedik
-  // T >> Product ise keyof T >> 'name' | 'price' olur (union)
-  find(property: keyof T, value: unknown): T | undefined {
-    return this._objects.find(obj => obj[property] === value);
-    // obj[property] >> Index signature property (runtime'da dinamik olarak gelen
-    // kesin olarak bilinmeyen parametresel yaklaşım)
-    // Yukarıda property: string yerine property: keyof T dersek T tipindeki
-    // keyword'ler olduğunu belirtmiş oluruz
-  }
-}
+//   // string olarak alınan arama parametresi ile arama yapınca bulunacak
+//   // value parametresini tipi belli değil. Bu nedenle "unknown" dedik
+//   // T >> Product ise keyof T >> 'name' | 'price' olur (union)
+//   find(property: keyof T, value: unknown): T | undefined {
+//     return this._objects.find(obj => obj[property] === value);
+//     // obj[property] >> Index signature property (runtime'da dinamik olarak gelen
+//     // kesin olarak bilinmeyen parametresel yaklaşım)
+//     // Yukarıda property: string yerine property: keyof T dersek T tipindeki
+//     // keyword'ler olduğunu belirtmiş oluruz
+//   }
+// }
 
-let store = new Store<Product>();
-store.add({ name: 'Silgi', price: 10 });
+// let store = new Store<Product>();
+// store.add({ name: 'Silgi', price: 10 });
 
-store.find('name', 'Silgi');
-store.find('price', 10);
+// store.find('name', 'Silgi');
+// store.find('price', 10);
 
 // store.find('nonExistingProperty', 10); // App crash!!!
 // yukardaki keyof T değişikliği yapılırsa derlemeden önce burada hata verilir
@@ -1154,3 +1154,136 @@ store.find('price', 10);
 
 //--------------------------------------------------------------------------
 // Type Mapping
+// interface Product {
+//   name: string;
+//   price: number;
+// }
+
+// type ReadOnlyProduct = {
+//   readonly // Index signature and keyof
+//   // Product'tan her döngüde bir key ismini al (name, price)
+//   // onu Property'de tut. Product[Property] ifadesi Property tipine
+//   // göre geri döner. (string, number)
+//   //   [Property in keyof Product]: Product[Property];
+//   // Property yerine kısa olsun diye P ya da K de kullanılabiliyor.
+//   [K in keyof Product]: Product[K]; //Type mapping
+//   //readonly name: string;
+//   //readonlt price: number;
+// };
+
+// let product: ReadOnlyProduct = { name: 'Bicycle', price: 799 };
+// // product.price = 999;    // HATA verir
+
+//--------------------------------------
+// typescriptlang.org sitesine bakılabilir.
+// interface Product {
+//   name: string;
+//   price: number;
+// }
+
+// interface Customer {
+//   name: string;
+//   id: string;
+// }
+
+// type Optional<T> = {
+//   [K in keyof T]?: T[K];
+// };
+
+// type Nullable<T> = {
+//   [K in keyof T]: T[K] | null;
+// };
+
+// type ReadOnly<T> = {
+//   readonly [K in keyof T]: T[K];
+// };
+
+// let product: ReadOnly<Product> = { name: 'Bicycle', price: 799 };
+// let customer: ReadOnly<Customer> = { name: 'Bicycle', id: '00056874' };
+
+//--------------------------------------------------------------------------
+// SECTION 6: Decorators (Lesson 55)
+//--------------------------------------------------------------------------
+// Class, method, property, accessor, parameter decorators
+// Dekoratör: Eklendiği class'a ait property'nin çalışma şeklini belirler
+
+// Aşağıdaki @Component kısmı typescript'te yok. Kendimiz yazmamız lazım. dekoratörler
+// aslında birer JS fonksiyonudur. Atına yazılan class ise o fonksiyona geçilen parametredir.
+// Bu fonksiyonda class'a yeni özellikler eklenebilir ya da mevcut olanlar değiştirilebilir.
+
+// @Component eklersek aşağıdaki class artık web uygulamasına özel bir component olur
+// @Component
+// class ProfileComponent {}
+
+//--------------------------------------
+// Class Decorators / Inheritance ile de çözülebilirdi (parent class'tan miras alan child class'lar)
+// Class için decorator parametresi o class'ın constructor fonksiyonu olmalı.
+// Parametre ismi olarak istenilen yazılabilir ama "constructor" kelimesi daha anlaşılır.
+// Bunun tipi class için mutlaka "Function" olmalıdır.
+// function Component(constructor: Function) {
+//   console.log('Component decorator called');
+
+//   // inserting new parameters and methods
+//   constructor.prototype.uniqueId = Date.now();
+//   constructor.prototype.insertInDOM = () => {
+//     console.log('Inserting the component in the DOM');
+//   };
+// }
+
+// @Component
+// class ProfileComponent {
+//   showProfile() {
+//     console.log('Showing profile...');
+//   }
+// }
+
+// Bu noktada ProfileComponent ile herhangi bir tanımlama yapmasak dahi
+// Component dekoratörü bir kez çalışacaktır. Değişiklik yapmak için
+// bize olanak sağlar. Kodun sadece yukarıdaki kısmını tsc ile derleyip
+// dist/index.js dosyasına bakınız.
+
+//--------------------------------------
+// Parameterized Decorators
+
+// Decorator Factory
+// function Component(value: number) {
+//   // return function(constructor: Function) {...} şeklinde de olurdu.
+//   return (constructor: Function) => {
+//     console.log('Component decorator called');
+
+//     // inserting new parameters and methods
+//     constructor.prototype.options = value;
+//     constructor.prototype.uniqueId = Date.now();
+//     constructor.prototype.insertInDOM = () => {
+//       console.log('Inserting the component in the DOM');
+//     };
+//   };
+// }
+
+type ComponentOptions = {
+  selector: string;
+};
+
+// Decorator Factory
+function Component(options: ComponentOptions) {
+  // return function(constructor: Function) {...} şeklinde de olurdu.
+  return (constructor: Function) => {
+    console.log('Component decorator called');
+
+    // inserting new parameters and methods
+    constructor.prototype.options = options;
+    constructor.prototype.uniqueId = Date.now();
+    constructor.prototype.insertInDOM = () => {
+      console.log('Inserting the component in the DOM');
+    };
+  };
+}
+
+// HTML dökümanında id'si "#my-profile" olan obje alınıyor ve bu dekoratör'e parametre olarak
+// geçiliyor. "selector" parametresinin tipi de "ComponentOptions" tipinden olmak zorunda.
+@Component({ selector: '#my-profile' })
+class ProfileComponent {
+  showProfile() {
+    console.log('Showing profile...');
+  }
+}
