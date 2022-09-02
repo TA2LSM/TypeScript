@@ -1260,30 +1260,118 @@
 //   };
 // }
 
-type ComponentOptions = {
-  selector: string;
-};
+// type ComponentOptions = {
+//   selector: string;
+// };
 
-// Decorator Factory
-function Component(options: ComponentOptions) {
-  // return function(constructor: Function) {...} şeklinde de olurdu.
-  return (constructor: Function) => {
-    console.log('Component decorator called');
+// // Decorator Factory
+// function Component(options: ComponentOptions) {
+//   // return function(constructor: Function) {...} şeklinde de olurdu.
+//   return (constructor: Function) => {
+//     console.log('Component decorator called');
 
-    // inserting new parameters and methods
-    constructor.prototype.options = options;
-    constructor.prototype.uniqueId = Date.now();
-    constructor.prototype.insertInDOM = () => {
-      console.log('Inserting the component in the DOM');
-    };
-  };
-}
+//     // inserting new parameters and methods
+//     constructor.prototype.options = options;
+//     constructor.prototype.uniqueId = Date.now();
+//     constructor.prototype.insertInDOM = () => {
+//       console.log('Inserting the component in the DOM');
+//     };
+//   };
+// }
 
-// HTML dökümanında id'si "#my-profile" olan obje alınıyor ve bu dekoratör'e parametre olarak
-// geçiliyor. "selector" parametresinin tipi de "ComponentOptions" tipinden olmak zorunda.
-@Component({ selector: '#my-profile' })
-class ProfileComponent {
-  showProfile() {
-    console.log('Showing profile...');
-  }
-}
+// // HTML dökümanında id'si "#my-profile" olan obje alınıyor ve bu dekoratör'e parametre olarak
+// // geçiliyor. "selector" parametresinin tipi de "ComponentOptions" tipinden olmak zorunda.
+// @Component({ selector: '#my-profile' })
+// class ProfileComponent {
+//   showProfile() {
+//     console.log('Showing profile...');
+//   }
+// }
+
+//--------------------------------------
+// Decorator Composition
+// function Pipe(constructor: Function) {
+//   console.log('Pipe decorator called');
+//   constructor.prototype.pipe = true;
+// }
+
+// type ComponentOptions = {
+//   selector: string;
+// };
+
+// // Decorator Factory
+// function Component(options: ComponentOptions) {
+//   // return function(constructor: Function) {...} şeklinde de olurdu.
+//   return (constructor: Function) => {
+//     console.log('Component decorator called');
+
+//     // inserting new parameters and methods
+//     constructor.prototype.options = options;
+//     constructor.prototype.uniqueId = Date.now();
+//     constructor.prototype.insertInDOM = () => {
+//       console.log('Inserting the component in the DOM');
+//     };
+//   };
+// }
+
+// // aşağıdan yukarıya doğru sırayla decorator fonksiyonları çağrılır.
+// @Component({ selector: '#my-profile' }) // ardından bu çağrılır
+// @Pipe // ilk bu çağrılır
+// class ProfileComponent {
+//   showProfile() {
+//     console.log('Showing profile...');
+//   }
+// }
+
+//--------------------------------------
+// Method Decorators
+// Bir metoda dekoratör atamak için 3 ayrı parametre lazım. Bunların tipleri çok önemli.
+// ilk parametre ilgili metodu içeren bir objedir. tipi "any"dir.
+// (any tipi kullanılmaması gereken bir tip ama burada TSC bizden bunu bekliyor)
+// İkinci parametre ilgili metodun ismidir. tipi string'dir.
+// üçüncü parametre "PropertyDescriptor" özel tip isminde olan ilgili metodun tanımlayıcısıdır.
+// PropertyDescriptor, ultimate javaScript kursunun 2. kısmında varmış.
+// function Log(target: any, methodName: string, descriptor: PropertyDescriptor) {
+//   const original = descriptor.value as Function;
+//   // original'ın type'ı any. O nedenle . notation'da herhangi bir metot çıkmaz.
+//   // Aşağıda bunu çağırırken yukarıdaki tip bildirimini yapmamız lazım
+//   // (as Function kısmı)
+
+//   // ilgli metodu komple değiştirmek için kullanılabilir. Aşağıdaki metot
+//   // Person class'ındaki say() metodu yerine geçecek. Burada metodu override ettik.
+//   // tanımlama arrow function olarak yazılırsa this kısmı hata verir. Çünkü
+//   // arrow function'ların kendi "this" keyword'leri yoktur.
+//   // --- (1) ---
+//   // descriptor.value = function () {
+//   //   console.log('Before new implementation');
+//   //   original.call(this, 'Blue Sky');
+//   //   console.log('After new implementation');
+//   // };
+
+//   // --- (2) ---
+//   // parametre olarak message: string yerine ...args: any geçtik
+//   // böylece bu fonksiyon daha genel olarak çeşitli tipte parametreleri
+//   // alacak şekle geldi.
+//   descriptor.value = function (...args: any) {
+//     console.log('Before new implementation');
+//     original.call(this, ...args);
+//     // ...args ile orijinal fonksiyona da bütün bu parametreleri
+//     // teker teker geçebiliriz.
+//     console.log('After new implementation');
+//   };
+// }
+
+// class Person {
+//   @Log
+//   say(message: string) {
+//     console.log('Person says: ' + message);
+//   }
+// }
+
+// let person = new Person();
+// person.say('Hello');
+// // Hello mesajı ignore edilir çünkü dekoratörde bu metodu override ettik (1)
+// // Hello mesajı kullanılır (2)
+
+//--------------------------------------
+//
