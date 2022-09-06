@@ -1374,4 +1374,4 @@
 // // Hello mesajı kullanılır (2)
 
 //--------------------------------------
-//
+//Accessor Decorators
